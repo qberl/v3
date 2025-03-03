@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Questionnaire IVG</title>
+</head>
+<style> 
+/* Reset de base pour harmoniser l'affichage */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Style global du corps de page */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+  line-height: 1.6;
+  padding: 20px;
+}
+
+/* Titres principaux */
+h1, h2 {
+  margin-bottom: 10px;
+}
+
+/* Zones (sections) pour structurer le contenu */
+section {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Surligner un peu l’en-tête des sections */
+section h2 {
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+}
+
+/* Paragraphes, textes */
+p {
+  margin-bottom: 10px;
+}
+
+/* Formulaires */
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Label et champs */
+label {
+  display: inline-block;
+  margin-right: 10px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+/* Pour séparer joliment chaque groupe de questions */
+form p {
+  margin-top: 16px;
+}
+
+/* Inputs, selects, textarea */
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+  padding: 6px 8px;
+  margin-top: 6px;
+  margin-bottom: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 300px;
+  font-size: 0.95rem;
+}
+
+/* Boutons radio et cases à cocher */
+input[type="radio"],
+input[type="checkbox"] {
+  margin-right: 5px;
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+/* Boutons */
+button {
+  width: fit-content;
+  padding: 10px 20px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #1976d2; 
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover:not(:disabled) {
+  background-color: #005bb5; /* Couleur plus foncée au survol */
+}
+
+button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+/* Synthèse */
+#sectionSynthese {
+  background-color: #fafafa;
+  border: 2px dashed #ddd;
+}
+
+#sectionSynthese h2 {
+  border-bottom: none;
+}
+
+#resumeReponses {
+  margin-top: 10px;
+}
+
+/* Pour donner un peu d’espace entre les options radio/checkbox */
+form label + label {
+  margin-left: 20px;
+}
+
+</style> 
+<body>
+
+  <!-- =========================
+       Page de présentation
+  ========================== -->
+  <section id="pagePresentation">
+    <h1>Bienvenue sur le questionnaire</h1>
+    <p>
+      Ce questionnaire a pour but de recueillir vos informations préalables. 
+      Vos réponses resteront confidentielles. 
+    </p>
+    <button id="btnDemarrer" onclick="demarrerQuestionnaire()">
+      Démarrer
+    </button>
+  </section>
+
+  <!-- =========================
+       Section 1 : Informations générales
+  ========================== -->
+  <section id="section1" style="display: none;">
+    <h2>Section 1 : Informations générales</h2>
+    <form id="formSection1">
+      <!-- Q1 -->
+      <p><strong>Q1. Quels sont vos besoins pour cette consultation ?</strong></p>
+      <!-- Pour autoriser plusieurs besoins, on utilise plusieurs checkboxes -->
+      <label>
+        <input type="checkbox" name="besoins" value="IVG médicamenteuse">
+        IVG médicamenteuse
+      </label><br>
+      <label>
+        <input type="checkbox" name="besoins" value="IVG chirurgicale">
+        IVG chirurgicale
+      </label><br>
+      <label>
+        <input type="checkbox" name="besoins" value="Echographie">
+        Echographie
+      </label><br>
+      <label>
+        <input type="checkbox" name="besoins" value="Informations">
+        Informations
+      </label><br>
+      <label>
+        <input type="checkbox" name="besoins" value="Aides">
+        Aides
+      </label><br>
+      <label>
+        <input type="checkbox" name="besoins" value="Autre">
+        Autre :
+        <input type="text" name="besoinsAutre" placeholder="Précisez...">
+      </label>
+
+      <!-- Q2 -->
+      <p><strong>Q2. Vous sentez-vous soutenue par votre entourage ?</strong></p>
+      <label>
+        <input type="radio" name="soutien" value="Oui" required>
+        Oui
+      </label>
+      <label>
+        <input type="radio" name="soutien" value="Non" required>
+        Non
+      </label>
+
+      <!-- Q3 -->
+      <p><strong>Q3. Venez-vous de votre plein gré ?</strong></p>
+      <label>
+        <input type="radio" name="pleinGre" value="Oui" required>
+        Oui
+      </label>
+      <label>
+        <input type="radio" name="pleinGre" value="Non" required>
+        Non
+      </label>
+
+      <br><br>
+      <button id="btnSuivantSec1" type="button" disabled onclick="afficherSection2()">
+        Suivant
+      </button>
+    </form>
+  </section>
+
+  <!-- =========================
+       Section 2 : ATCD médicaux
+  ========================== -->
+  <section id="section2" style="display: none;">
+    <h2>Section 2 : ATCD médicaux</h2>
+    <form id="formSection2">
+      <!-- Q1 : Groupe sanguin -->
+      <p><strong>Q1. Quel est votre groupe sanguin ?</strong></p>
+      <select name="groupeSanguin" required>
+        <option value="" disabled selected>-- Choisissez --</option>
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="AB">AB</option>
+        <option value="O">O</option>
+        <option value="Inconnu">Inconnu</option>
+      </select>
+
+      <!-- Q2 : ATCD chirurgicaux -->
+      <p><strong>Q2. Avez-vous des antécédents chirurgicaux ?</strong></p>
+      <label>
+        <input type="radio" name="atcdChir" value="Oui" required onclick="afficherDetailATCD(true)">
+        Oui
+      </label>
+      <label>
+        <input type="radio" name="atcdChir" value="Non" required onclick="afficherDetailATCD(false)">
+        Non
+      </label>
+
+      <!-- Champ de détail affiché uniquement si l’utilisateur répond "Oui" -->
+      <div id="detailAtcd" style="display: none; margin-top: 10px;">
+        <label for="detailChir">Détails :</label><br>
+        <textarea id="detailChir" name="detailChir" rows="3" cols="40"></textarea>
+      </div>
+
+      <br><br>
+      <button id="btnSynthese" type="button" disabled onclick="afficherSynthese()">
+        Afficher Synthèse
+      </button>
+    </form>
+  </section>
+
+  <!-- =========================
+       Section Synthèse
+  ========================== -->
+  <section id="sectionSynthese" style="display: none;">
+    <h2>Synthèse de vos réponses</h2>
+    <div id="resumeReponses">
+      <!-- Le contenu sera inséré dynamiquement par JavaScript -->
+    </div>
+  </section>
+
+  <!-- =========================
+       SCRIPT : GESTION DES PAGES / FORMULAIRES
+  ========================== -->
+  <script>
+    // ========================
+    // PAGE DE PRESENTATION
+    // ========================
+    function demarrerQuestionnaire() {
+      document.getElementById("pagePresentation").style.display = "none";
+      document.getElementById("section1").style.display = "block";
+    }
+
+    // ========================
+    // SECTION 1 : VALIDATION
+    // ========================
+    const formSection1 = document.getElementById("formSection1");
+    const btnSuivantSec1 = document.getElementById("btnSuivantSec1");
+
+    // Surveille le formulaire de section 1 pour activer/désactiver le bouton "Suivant"
+    formSection1.addEventListener("input", () => {
+      if (formSection1.checkValidity()) {
+        btnSuivantSec1.disabled = false;
+      } else {
+        btnSuivantSec1.disabled = true;
+      }
+    });
+
+    function afficherSection2() {
+      document.getElementById("section1").style.display = "none";
+      document.getElementById("section2").style.display = "block";
+    }
+
+    // ========================
+    // SECTION 2 : ATCD chirurgicaux
+    // ========================
+    function afficherDetailATCD(estAffiche) {
+      const divDetail = document.getElementById("detailAtcd");
+      if (estAffiche) {
+        divDetail.style.display = "block";
+      } else {
+        divDetail.style.display = "none";
+        // Effacer le champ si on re-sélectionne "Non"
+        document.getElementById("detailChir").value = "";
+      }
+    }
+
+    const formSection2 = document.getElementById("formSection2");
+    const btnSynthese = document.getElementById("btnSynthese");
+
+    // Surveille le formulaire de section 2 pour activer/désactiver le bouton "Afficher Synthèse"
+    formSection2.addEventListener("input", () => {
+      if (formSection2.checkValidity()) {
+        btnSynthese.disabled = false;
+      } else {
+        btnSynthese.disabled = true;
+      }
+    });
+
+    // ========================
+    // AFFICHER LA SYNTHÈSE
+    // ========================
+    function afficherSynthese() {
+      // Masquer la section2
+      document.getElementById("section2").style.display = "none";
+
+      // Récupérer les valeurs de Section 1
+      const besoins = Array.from(formSection1.querySelectorAll('input[name="besoins"]:checked')).map(el => el.value);
+      const besoinsAutre = formSection1.querySelector('input[name="besoinsAutre"]').value.trim();
+      const soutien = formSection1.querySelector('input[name="soutien"]:checked').value;
+      const pleinGre = formSection1.querySelector('input[name="pleinGre"]:checked').value;
+
+      // Récupérer les valeurs de Section 2
+      const groupeSanguin = formSection2.querySelector('select[name="groupeSanguin"]').value;
+      const atcdChir = formSection2.querySelector('input[name="atcdChir"]:checked').value;
+      const detailChir = formSection2.querySelector('#detailChir').value.trim();
+
+      // Construire un récapitulatif
+      let recap = "";
+
+      // SECTION 1
+      recap += "<h3>Section 1 : Informations générales</h3>";
+      // Q1 : Besoins
+      if (besoins.length > 0) {
+        recap += "<p><strong>Besoins :</strong> " + besoins.join(", ");
+        // Si la case "Autre" a été cochée, on ajoute le contenu
+        if (besoins.includes("Autre") && besoinsAutre !== "") {
+          recap += " (" + besoinsAutre + ")";
+        }
+        recap += "</p>";
+      }
+      // Q2 : Soutien
+      if (soutien === "Oui") {
+        recap += "<p><strong>Soutien entourage :</strong> Oui</p>";
+      } else if (soutien === "Non") {
+        // Ne pas l'afficher si on souhaite ignorer la réponse négative
+        // recap += "<p><strong>Soutien :</strong> Non</p>";
+      }
+      // Q3 : Plein gré
+      if (pleinGre === "Oui") {
+        recap += "<p><strong>Plein gré :</strong> Oui</p>";
+      } else if (pleinGre === "Non") {
+        // Même logique : ignorer si « Non »
+        // recap += "<p><strong>Plein gré :</strong> Non</p>";
+      }
+
+      // SECTION 2
+      recap += "<h3>Section 2 : ATCD médicaux</h3>";
+      // Q1 : Groupe sanguin
+      if (groupeSanguin && groupeSanguin !== "Inconnu") {
+        recap += "<p><strong>Groupe sanguin :</strong> " + groupeSanguin + "</p>";
+      }
+      // Q2 : ATCD chirurgicaux
+      if (atcdChir === "Oui") {
+        recap += "<p><strong>ATCD chirurgicaux :</strong> Oui";
+        if (detailChir) {
+          recap += " (Détails : " + detailChir + ")";
+        }
+        recap += "</p>";
+      } else {
+        // Idem, on n'affiche rien si c'est "Non"
+      }
+
+      // Injecter la synthèse dans le DOM
+      document.getElementById("resumeReponses").innerHTML = recap;
+
+      // Afficher la section synthèse
+      document.getElementById("sectionSynthese").style.display = "block";
+    }
+  </script>
+
+</body>
+</html>
